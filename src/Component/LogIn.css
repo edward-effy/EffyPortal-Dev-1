@@ -1,0 +1,95 @@
+.headerDiv{
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20rem;
+  background-color: transparent;
+}
+
+.header{
+  margin-right: 3px;
+  background-color: #32cfcf;
+  height: 300px;
+  width: 500px;
+  border-radius: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transform:
+    perspective(1000px)
+    rotateY(25deg)
+    rotateX(0deg);
+  filter: blur(0);
+  transition: 0.6s ease all;
+  box-shadow: rgba(22, 31, 39, 0.42) 0px 60px 123px -25px,
+  rgba(19, 26, 32, 0.08) 0px 35px 75px -35px;
+
+  &:hover {
+    transform:
+      perspective(800px)
+      rotateY(-15deg)
+      translateY(-50px)
+      rotateX(10deg)
+      scale(.9);
+    filter: blur(.5px);
+    opacity: 1;
+    box-shadow: rgba(22, 31, 39, 0.42) 0px 60px 123px -25px,
+    rgba(19, 26, 32, 0.08) 0px 35px 75px -35px;
+  }
+}
+
+.headerTxt{
+  color: #32cfcf;
+  font-size: 55px;
+  font-weight: bold;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  background-color: rgb(221, 218, 218);
+  border-radius: 30px;
+  width: 100%;
+  height: 20%;
+  filter: blur(0);
+  box-shadow: -7px -7px 20px 0 rgba(255, 255, 255, 0.7),
+    7px 7px 20px 0 rgba(0, 0, 0, 0.2);
+}
+
+body {
+  font-family: sans-serif;
+  background: rgb(214, 214, 214);
+}
+
+.signInBtn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-width: 150px;
+  height: 50px;
+  margin: 20px;
+  background: rgb(204, 204, 204);
+  border: none;
+  border-radius: 25px;
+  color: rgb(50, 207, 207);
+  font-size: 15px;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  box-shadow: -7px -7px 20px 0 rgba(226, 226, 226, 0.7),
+    7px 7px 20px 0 rgba(0, 0, 0, 0.2);
+}
+
+.signInBtn:hover {
+  box-shadow: inset -7px -7px 20px 0 rgba(255, 255, 255, 0.7),
+    inset 7px 7px 20px 0 rgba(0, 0, 0, 0.2);
+}
+
+.devWatermark{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 32vh;
+  color: rgba(128, 128, 128, 0.6);
+}

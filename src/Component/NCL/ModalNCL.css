@@ -1,0 +1,192 @@
+@import url('https://fonts.googleapis.com/css?family=Fira+Mono:400');
+
+.modal {
+  background-color: rgba(255, 255, 255, 0.067);
+  backdrop-filter: blur(4px);
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modalBackgroundNCL{
+  background-color: rgb(255, 255, 255);
+  border-radius: 15px;
+  height: 72vh !important;
+  width: 70% !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.modal .btn {
+  display: block;
+}
+
+.inputSelect{
+  width: 20vh ;
+  margin-left: 2px;
+}
+
+.inputForm{
+  padding: 10px;
+  font-family: 'Courier New', Courier, monospace;
+  display: flex; /* Enable Flexbox */
+  flex-wrap: wrap; /* Allow the items to wrap to the next line */
+  justify-content: space-between; /* Space out items */
+  align-items: center; /* Align items vertically */
+  gap: 20px; /* Space between each item */
+  width: 90%;
+  height: 48vh !important;
+  margin-top: 1.5rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+.txtInputGrp { 
+  position:relative; 
+  margin-bottom:15px; 
+  width: 20vh;
+
+}
+
+.floating-label {
+  color:#1e4c82; 
+  font-size:16px;
+  font-weight:normal;
+  position:absolute;
+  pointer-events:none;
+  left:10px;
+  top:9px;
+  background:#fff;
+  transition:0.2s ease all; 
+  -moz-transition:0.2s ease all; 
+  -webkit-transition:0.2s ease all;
+}
+
+.dollarSign {
+    display: flex;
+    align-items: center;
+    font-weight: 400;
+    height: 38px;
+    color: #323840;
+    padding: 0 5px 0 20px;
+    font-size:14px;
+    text-align: center;
+    white-space: nowrap;
+    border: 1px solid #3D85D8;
+  border-radius: 4px 0 0 4px;
+  border-right:none;
+}
+
+.fileUpload{
+  font-size: 14px;
+  width: 35vh;
+  color:#7a8c9d;
+  border: 1px dashed grey;
+  margin-bottom: 20px;
+  padding: 5px;
+  display: flex;
+  text-align:center;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+} 
+
+@media (max-width: 768px) { /* Adjust max-width as needed for smaller screens */
+  .inputs input,
+  .inputs select {
+    max-width: calc(50% - 20px); /* Adjust size for smaller screens */
+  }
+}
+
+.submitBtn{
+  border: 1px solid rgb(72, 142, 255);
+  font-size: medium;
+  background-color: transparent;
+  color: rgb(72, 142, 255);
+  width: 7rem;
+  border-radius: 30px !important;
+  cursor: pointer;
+}
+
+.btns{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  padding-top: 1rem;
+  padding-right: auto;
+  flex-direction: column;
+}
+
+
+
+@keyframes glitch{
+  2%,64%{
+    transform: translate(2px,0) skew(0deg);
+  }
+  4%,60%{
+    transform: translate(-2px,0) skew(0deg);
+  }
+  62%{
+    transform: translate(0,0) skew(5deg); 
+  }
+}
+
+.modalHeaderTxt{
+  font-weight: bold;
+  font-size: 30px;
+  animation: glitch 1s linear infinite;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  margin-top: 1vh;
+}
+
+.modalHeaderTxt:before,
+.modalHeaderTxt:after{
+  content: attr(title);
+  position: absolute;
+  left: 0;
+}
+
+.modalHeaderTxt:before{
+  animation: glitchTop 1s linear infinite;
+  clip-path: polygon(0 0, 100% 0, 100% 33%, 0 33%);
+  -webkit-clip-path: polygon(0 0, 100% 0, 100% 33%, 0 33%);
+}
+
+@keyframes glitchTop{
+  2%,64%{
+    transform: translate(2px,-2px);
+  }
+  4%,60%{
+    transform: translate(-2px,2px);
+  }
+  62%{
+    transform: translate(13px,-1px) skew(-13deg); 
+  }
+}
+
+.modalHeaderTxt:after{
+  animation: glitchBotom 1.5s linear infinite;
+  clip-path: polygon(0 67%, 100% 67%, 100% 100%, 0 100%);
+  -webkit-clip-path: polygon(0 67%, 100% 67%, 100% 100%, 0 100%);
+}
+
+@keyframes glitchBotom{
+  2%,64%{
+    transform: translate(-2px,0);
+  }
+  4%,60%{
+    transform: translate(-2px,0);
+  }
+  62%{
+    transform: translate(-22px,5px) skew(21deg); 
+  }
+}

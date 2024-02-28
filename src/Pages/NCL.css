@@ -1,0 +1,63 @@
+.nclBackground{
+  background:
+    url(https://images.unsplash.com/photo-1622547748225-3fc4abd2cca0?q=80&w=1932&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D)
+    center / cover no-repeat fixed;
+  height: 100vh;
+}
+
+
+  
+  @keyframes glitch{
+    2%,64%{
+      transform: translate(5px,0) skew(0deg);
+    }
+    4%,60%{
+      transform: translate(-5px,0) skew(0deg);
+    }
+    62%{
+      transform: translate(0,0) skew(5deg); 
+    }
+  }
+  
+  .modalHeaderTxt:before,
+  .modalHeaderTxt:after{
+    content: attr(title);
+    position: absolute;
+    left: 0;
+  }
+  
+  .modalHeaderTxt:before{
+    animation: glitchTop 1s linear infinite;
+    clip-path: polygon(0 0, 100% 0, 100% 33%, 0 33%);
+    -webkit-clip-path: polygon(0 0, 100% 0, 100% 33%, 0 33%);
+  }
+  
+  @keyframes glitchTop{
+    2%,64%{
+      transform: translate(5px,-2px);
+    }
+    4%,60%{
+      transform: translate(-5px,2px);
+    }
+    62%{
+      transform: translate(13px,-1px) skew(-13deg); 
+    }
+  }
+  
+  .modalHeaderTxt:after{
+    animation: glitchBotom 1.5s linear infinite;
+    clip-path: polygon(0 67%, 100% 67%, 100% 100%, 0 100%);
+    -webkit-clip-path: polygon(0 67%, 100% 67%, 100% 100%, 0 100%);
+  }
+  
+  @keyframes glitchBotom{
+    2%,64%{
+      transform: translate(-5px,0);
+    }
+    4%,60%{
+      transform: translate(-5px,0);
+    }
+    62%{
+      transform: translate(-22px,5px) skew(21deg); 
+    }
+  }

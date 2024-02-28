@@ -1,0 +1,23 @@
+voyage_num
+ship_name
+start_date
+end_date
+plcc_dpa (PLCC + DPA)
+plcc 
+dpa 
+vat (total tax)
+revenue (Fine Jewelry "Guest Rev" + Fine Jewelry "Crew Rev") 
+commission(36%) (Rev * (1+36%))
+vip_sales
+commission_vip(20%) (vip_sales * (1+20%))
+discount
+food
+beverages
+cc_fee
+supplies
+medical_charges
+printing
+wheel_of_fortune (wof) prize_voucher
+misc_charges(add all misc)
+cash_adv
+effy_rev

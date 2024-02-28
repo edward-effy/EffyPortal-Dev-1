@@ -1,0 +1,88 @@
+/* 
+BREEZE
+CARNIVAL MAGIC *
+CELEBRATION
+CONQUEST
+DREAM
+ECSTASY
+ELATION
+FREEDOM
+GLORY
+HORIZON
+LEGEND
+LIBERTY
+LUMINOSA
+MAGIC *
+MARDI GRAS
+MIRACLE
+PANORAMA
+PARADISE
+PRIDE
+RADIANCE
+SENSATION
+SPIRIT
+SPLENDOR
+SUNRISE
+SUNSHINE
+VALOR
+VISTA
+*/
+
+
+Excel Field
+CRUISE NAME 
+VOYAGE #
+DATE 
+
+REVENUE SAIL AND SIGN
+REVENUE DIRECT CC
+VATON EUROPEAN REVENUE
+CARNIVAL SHARE
+OFFICE SUPPLIES
+DISCOUNT SHARE
+EXECUTIVE FOLIO CHARGES
+CC FEE SAIL AND SIGN
+CC FEE DIRECT CC
+MEAL CHARGE
+PAROLE FEE
+CASH ADVANCE PAYROLL
+CASH PAID ON BOARD
+EFFY SHARE
+
+
+
+
+
+
+
+
+
+
+
+
+/*
+    getCruiseName(){
+        if (strInPDF == nameVar[])    //nameVar[] is the Const cruise name variable
+            return strInPDF;
+        else
+            console.log("Invalid Cruise Name");
+    }
+
+    getVoyageNum(){
+        return VoyageNum;
+    }
+
+    getDate(Str Voyage){
+        if(Voyage.length() == 10)
+            int shortYY = Voyage[8,9];
+            int shortDD = Voyage[4,5];
+            int shortMM = Voyage[6,7];
+            return "20" + shortYY + "-" + shortMM + "-" +shortDD;
+        else 
+            int norYYYY = Voyage[2,5];
+            int norMM = Voyage[6,7];
+            int norDD = Voyage[8,9];
+            return norYYYY + "-" + norMM + "-" + norDD;
+    }
+
+*/

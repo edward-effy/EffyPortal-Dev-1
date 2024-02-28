@@ -1,0 +1,16 @@
+{
+  "files": {
+    "main.css": "/static/css/main.7843bd11.css",
+    "main.js": "/static/js/main.7306851b.js",
+    "static/media/ncl.jpg": "/static/media/ncl.7ec2d34266f33ced6a8c.jpg",
+    "static/media/pizza.jpg": "/static/media/pizza.3465420826def7e78e4b.jpg",
+    "static/media/ccl.jpg": "/static/media/ccl.50c86fb95e321eab6bec.jpg",
+    "index.html": "/index.html",
+    "main.7843bd11.css.map": "/static/css/main.7843bd11.css.map",
+    "main.7306851b.js.map": "/static/js/main.7306851b.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.7843bd11.css",
+    "static/js/main.7306851b.js"
+  ]
+}
