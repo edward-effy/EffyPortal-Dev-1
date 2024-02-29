@@ -105,6 +105,7 @@ function moneyFormat(value, isNegative = false) {
   }
 }
 
+// Ship name mapping from voyage number abbr. to full name
 const shipNameMap = {
   BR:	"BREEZE",
   CB:	"CELEBRATION",
@@ -194,7 +195,7 @@ const AddModal = ({ closeModal }) => {
   };
 
   const handleSubmit_Add = (event) => {
-    const url = `http://localhost:3000/ccl_post`
+    const url = `https://effyaws5.effysystems.com/ccl_post`
     fetch(url, {
       method: "POST",
       headers: {
