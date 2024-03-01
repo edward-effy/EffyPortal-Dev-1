@@ -21,12 +21,6 @@
 }
 
 .glassmorphic {
-	position: relative;
-	display: flex;
-    flex-direction: column;
-	justify-content: center;
-	align-items: center;
-	flex-wrap: wrap;
 	z-index: 3;
 	width: 320px;
 	height: 350px;
@@ -44,6 +38,7 @@
 .imgBox {
 	position: relative;
 	text-align: center;
+    margin-top: 2rem;
 }
 
 .carnivalPic{
@@ -52,13 +47,14 @@
 }
 
 .norwegianPic{
-    width: 80px;
-    height: 80px;
-    margin: none;
+    width: 100px;
+    height: 100px;
 }
 
 .otherPic{
     color: grey;
+    width: 100px;
+    height: 100px;
 }
 
 .contentBoxCCL {
@@ -70,7 +66,7 @@
 .contentBoxCCL:before {
 	content: 'CCL';
     position: absolute;
-        top: -240px;
+        top: -220px;
         left: -130px;
     width: 100%;
     font-size: 4rem;
@@ -90,7 +86,7 @@
 .contentBoxNCL:before {
 	content: 'NCL';
     position: absolute;
-        top: -240px;
+        top: -220px;
         left: -130px;
     width: 100%;
     font-size: 4rem;
@@ -110,7 +106,7 @@
 .contentBoxOther:before {
 	content: 'OTH';
     position: absolute;
-        top: -170px;
+        top: -140px;
         left: -130px;
     width: 100%;
     font-size: 4rem;
@@ -160,16 +156,6 @@ h3 {
     -moz-box-shadow: 0px 0px 10px 3px rgba(78,181,171,0.75);
     box-shadow: 0px 0px 10px 3px rgba(78,181,171,0.75);
 }
-
-/* .otherBox:hover{
-    filter: brightness(100%);
-    background-size: 160%;
-    border-radius: 15px;
-    -webkit-box-shadow:0px 0px 10px 3px rgba(78,181,171,0.75);
-    -moz-box-shadow: 0px 0px 10px 3px rgba(78,181,171,0.75);
-    box-shadow: 0px 0px 10px 3px rgba(78,181,171,0.75);
-} */
-
 
 .circles{
     position: absolute;
