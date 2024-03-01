@@ -28,7 +28,7 @@ const BodyPage = () => {
   }
   function clickOther(event) {
     event.preventDefault();
-    alert("Coming Soon!");
+    window.location.href = "https://youtu.be/dQw4w9WgXcQ";
   }
 
   return (
@@ -65,7 +65,7 @@ const BodyPage = () => {
             </i>
           </div>
           <div className="contentBoxOther">
-            <h3>Other</h3>
+            <h3>Other Cruise Line Invoice Data</h3>
             <button className="buttons" onClick={clickOther}>Other</button>
           </div>
         </div>
