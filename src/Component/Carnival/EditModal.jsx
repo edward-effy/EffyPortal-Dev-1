@@ -29,7 +29,7 @@ const EditModal = (props) => {
   // HandleSummit function
   const handleSubmit_Edit = (event) => {
     event.preventDefault();
-    fetch(`https://effyaws5.effysystems.com/ccl_put/${props.currentData.voyage_num}`, {
+    fetch(`https://dev.effysystems.com/ccl_put/${props.currentData.voyage_num}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",

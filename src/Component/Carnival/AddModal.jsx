@@ -107,34 +107,12 @@ function moneyFormat(value, isNegative = false) {
 
 // Ship name mapping from voyage number abbr. to full name
 const shipNameMap = {
-  BR:	"BREEZE",
-  CB:	"CELEBRATION",
-  CQ:	"CONQUEST",
-  DR:	"DREAM",
-  EC:	"ECSTASY",
-  EL:	"ELATION",
-  FD:	"FREEDOM",
-  GL:	"GLORY",
-  HZ:	"HORIZON",
-  JB:	"JUBILEE",
-  LE:	"LEGEND",
-  LI:	"LIBERTY",
-  LM:	"LUMINOSA",
-  MC:	"MAGIC",
-  MD:	"MARDI GRAS",
-  MI:	"MIRACLE",
-  PO:	"PANORAMA",
-  PA:	"PARADISE",
-  PR:	"PRIDE",
-  RD:	"RADIANCE",
-  SE:	"SENSATION",
-  SP:	"SPIRIT",
-  SL:	"SPLENDOR",
-  SN:	"SUNRISE",
-  SH:	"SUNSHINE",
-  VA:	"VALOR",
-  VX:	"VENEZIA",
-  VS:	"VISTA",
+  BR:	"BREEZE", CB:	"CELEBRATION", CQ: "CONQUEST", DR: "DREAM", EC:	"ECSTASY",
+  EL:	"ELATION", FD: "FREEDOM", GL:	"GLORY", HZ: "HORIZON", JB: "JUBILEE",
+  LE:	"LEGEND", LI:	"LIBERTY", LM: "LUMINOSA", MC: "MAGIC", MD: "MARDI GRAS",
+  MI:	"MIRACLE", PO: "PANORAMA", PA: "PARADISE", PR: "PRIDE", RD:	"RADIANCE",
+  SE:	"SENSATION", SP: "SPIRIT", SL: "SPLENDOR", SN: "SUNRISE", SH:	"SUNSHINE",
+  VA:	"VALOR", VX: "VENEZIA", VS: "VISTA",
 };
 
 // Function to extract the ship name based on the voyage number
@@ -195,7 +173,7 @@ const AddModal = ({ closeModal }) => {
   };
 
   const handleSubmit_Add = (event) => {
-    const url = `https://effyaws5.effysystems.com/ccl_post`
+    const url = `https://dev.effysystems.com/ccl_post`
     fetch(url, {
       method: "POST",
       headers: {
