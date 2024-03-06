@@ -230,12 +230,8 @@ const AddModal = ({ closeModal }) => {
             <span className="inputGrp">
               <div className="dollarSign">$</div>
             </span>
-            <input className="inputTxt" type="text" placeholder=" " name="effy_share" label="Effy Share" onChange={(e) => setRows({ ...rows, effy_share: e.target.value })} value={rows.effy_share}/>
-            <label className="floating-label">Effy Share</label>
-          </div>
-          <div className="txtInputGrp">
-            <input className="inputTxt" type="text" placeholder=" " name="editor" label="Editor" value={rows.editor} readOnly/>
-            <label className="floating-label">Editor</label>
+            <input className="inputTxt" type="text" placeholder=" " name="rev_cc" label="Revenue CC" onChange={(e) => setRows({ ...rows, rev_cc: e.target.value })} value={rows.rev_cc || null}/>
+            <label className="floating-label">Revenue Direct CC</label>
           </div>
           <div className="txtInputGrp input-group">
             <span className="inputGrp">
@@ -248,8 +244,29 @@ const AddModal = ({ closeModal }) => {
             <span className="inputGrp">
               <div className="dollarSign">$</div>
             </span>
-            <input className="inputTxt" type="text" placeholder=" " name="rev_cc" label="Revenue CC" onChange={(e) => setRows({ ...rows, rev_cc: e.target.value })} value={rows.rev_cc || null}/>
-            <label className="floating-label">Revenue Direct CC</label>
+            <input className="inputTxt" type="text" placeholder=" " name="carnival_share" label="Carnival Share" onChange={(e) => setRows({ ...rows, carnival_share: e.target.value })} value={rows.carnival_share || null}/>
+            <label className="floating-label">Carnival Share</label>
+          </div>
+          <div className="txtInputGrp input-group">
+            <span className="inputGrp">
+              <div className="dollarSign">$</div>
+            </span>
+            <input className="inputTxt" type="text" placeholder=" " name="exec_folio" label="Exec. Folio" onChange={(e) => setRows({ ...rows, exec_folio: e.target.value })} value={rows.exec_folio || null}/>
+            <label className="floating-label">Exec. Folio</label>
+          </div>
+          <div className="txtInputGrp input-group">
+            <span className="inputGrp">
+              <div className="dollarSign">$</div>
+            </span>
+            <input className="inputTxt" type="text" placeholder=" " name="meal_charge" label="Meal Charge" onChange={(e) => setRows({ ...rows, meal_charge: e.target.value })} value={rows.meal_charge || null}/>
+            <label className="floating-label">Meal Charge</label>
+          </div>
+          <div className="txtInputGrp input-group">
+            <span className="inputGrp">
+              <div className="dollarSign">$</div>
+            </span>
+            <input className="inputTxt" type="text" placeholder=" " name="cash_adv" label="Cash Advance" onChange={(e) => setRows({ ...rows, cash_adv: e.target.value })} value={rows.cash_adv || null}/>
+            <label className="floating-label">Cash Advance</label>
           </div>
           <div className="txtInputGrp input-group">
             <span className="inputGrp">
@@ -283,27 +300,6 @@ const AddModal = ({ closeModal }) => {
             <span className="inputGrp">
               <div className="dollarSign">$</div>
             </span>
-            <input className="inputTxt" type="text" placeholder=" " name="carnival_share" label="Carnival Share" onChange={(e) => setRows({ ...rows, carnival_share: e.target.value })} value={rows.carnival_share || null}/>
-            <label className="floating-label">Carnival Share</label>
-          </div>
-          <div className="txtInputGrp input-group">
-            <span className="inputGrp">
-              <div className="dollarSign">$</div>
-            </span>
-            <input className="inputTxt" type="text" placeholder=" " name="exec_folio" label="Exec. Folio" onChange={(e) => setRows({ ...rows, exec_folio: e.target.value })} value={rows.exec_folio || null}/>
-            <label className="floating-label">Exec. Folio</label>
-          </div>
-          <div className="txtInputGrp input-group">
-            <span className="inputGrp">
-              <div className="dollarSign">$</div>
-            </span>
-            <input className="inputTxt" type="text" placeholder=" " name="meal_charge" label="Meal Charge" onChange={(e) => setRows({ ...rows, meal_charge: e.target.value })} value={rows.meal_charge || null}/>
-            <label className="floating-label">Meal Charge</label>
-          </div>
-          <div className="txtInputGrp input-group">
-            <span className="inputGrp">
-              <div className="dollarSign">$</div>
-            </span>
             <input className="inputTxt" type="text" placeholder=" " name="office_supp" label="Office Supplies" onChange={(e) => setRows({ ...rows, office_supp: e.target.value })} value={rows.office_supp || null}/>
             <label className="floating-label">Office Supplies</label>
           </div>
@@ -318,15 +314,15 @@ const AddModal = ({ closeModal }) => {
             <span className="inputGrp">
               <div className="dollarSign">$</div>
             </span>
-            <input className="inputTxt" type="text" placeholder=" " name="cash_adv" label="Cash Advance" onChange={(e) => setRows({ ...rows, cash_adv: e.target.value })} value={rows.cash_adv || null}/>
-            <label className="floating-label">Cash Advance</label>
+            <input className="inputTxt" type="text" placeholder=" " name="parole_fee" label="Parole Fee" onChange={(e) => setRows({ ...rows, parole_fee: e.target.value })} value={rows.parole_fee || null}/>
+            <label className="floating-label">Parole Fee</label>
           </div>
           <div className="txtInputGrp input-group">
             <span className="inputGrp">
               <div className="dollarSign">$</div>
             </span>
-            <input className="inputTxt" type="text" placeholder=" " name="parole_fee" label="Parole Fee" onChange={(e) => setRows({ ...rows, parole_fee: e.target.value })} value={rows.parole_fee || null}/>
-            <label className="floating-label">Parole Fee</label>
+            <input className="inputTxt" type="text" placeholder=" " name="effy_share" label="Effy Share" onChange={(e) => setRows({ ...rows, effy_share: e.target.value })} value={rows.effy_share}/>
+            <label className="floating-label">Effy Share</label>
           </div>
           <div className="txtInputGrp">
             <select className="inputSelect" onChange={(e) => setRows({ ...rows, status_paid: e.target.value })} value={rows.status_paid}>
@@ -335,6 +331,10 @@ const AddModal = ({ closeModal }) => {
               <option value="Paid">Paid</option>
             </select>
             <label className="floating-label">Status</label>
+          </div>
+          <div className="txtInputGrp">
+            <input className="inputTxt" type="text" placeholder=" " name="editor" label="Editor" value={rows.editor} readOnly/>
+            <label className="floating-label">Editor</label>
           </div>
         </form>
         <div className="btns" onDrop={handleDrop} onDragOver={handleDragOver} >

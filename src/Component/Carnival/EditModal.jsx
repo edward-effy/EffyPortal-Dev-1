@@ -92,13 +92,9 @@ const EditModal = (props) => {
         <div className="txtInputGrp input-group">
           <span className="inputGrp">
             <div className="dollarSign">$</div>
-          </span> 
-          <input className="inputTxt" type="text" placeholder=" "  name="effy_share" label="Effy Share" onChange={handleInputChange} value={row.effy_share}/>
-          <label className="floating-label">Effy Share</label>
-        </div>
-        <div className="txtInputGrp">
-          <input className="inputTxt" type="text" placeholder=" " name="editor" label="Editor" value={row.editor}/>
-          <label className="floating-label">Editor</label>
+          </span>
+          <input className="inputTxt" type="text" placeholder=" " name="rev_cc" label="Revenue CC" onChange={handleInputChange} value={row.rev_cc}/>
+          <label className="floating-label">Revenue Direct CC</label>
         </div>
         <div className="txtInputGrp input-group">
           <span className="inputGrp">
@@ -111,8 +107,22 @@ const EditModal = (props) => {
           <span className="inputGrp">
             <div className="dollarSign">$</div>
           </span>
-          <input className="inputTxt" type="text" placeholder=" " name="rev_cc" label="Revenue CC" onChange={handleInputChange} value={row.rev_cc}/>
-          <label className="floating-label">Revenue Direct CC</label>
+          <input className="inputTxt" type="text" placeholder=" " name="carnival_share" label="Carnival Share" onChange={handleInputChange} value={row.carnival_share}/>
+          <label className="floating-label">Carnival Share</label>
+        </div>
+        <div className="txtInputGrp input-group">
+          <span className="inputGrp">
+            <div className="dollarSign">$</div>
+          </span>
+          <input className="inputTxt" type="text" placeholder=" " name="exec_folio" label="Exec. Folio" onChange={handleInputChange} value={row.exec_folio}/>
+          <label className="floating-label">Exec. Folio</label>
+        </div>
+        <div className="txtInputGrp input-group">
+          <span className="inputGrp">
+            <div className="dollarSign">$</div>
+          </span>
+          <input className="inputTxt" type="text" placeholder=" " name="meal_charge" label="Meal Charge" onChange={handleInputChange} value={row.meal_charge}/>
+          <label className="floating-label">Meal Charge</label>
         </div>
         <div className="txtInputGrp input-group">
           <span className="inputGrp">
@@ -146,27 +156,6 @@ const EditModal = (props) => {
           <span className="inputGrp">
             <div className="dollarSign">$</div>
           </span>
-          <input className="inputTxt" type="text" placeholder=" " name="carnival_share" label="Carnival Share" onChange={handleInputChange} value={row.carnival_share}/>
-          <label className="floating-label">Carnival Share</label>
-        </div>
-        <div className="txtInputGrp input-group">
-          <span className="inputGrp">
-            <div className="dollarSign">$</div>
-          </span>
-          <input className="inputTxt" type="text" placeholder=" " name="exec_folio" label="Exec. Folio" onChange={handleInputChange} value={row.exec_folio}/>
-          <label className="floating-label">Exec. Folio</label>
-        </div>
-        <div className="txtInputGrp input-group">
-          <span className="inputGrp">
-            <div className="dollarSign">$</div>
-          </span>
-          <input className="inputTxt" type="text" placeholder=" " name="meal_charge" label="Meal Charge" onChange={handleInputChange} value={row.meal_charge}/>
-          <label className="floating-label">Meal Charge</label>
-        </div>
-        <div className="txtInputGrp input-group">
-          <span className="inputGrp">
-            <div className="dollarSign">$</div>
-          </span>
           <input className="inputTxt" type="text" placeholder=" " name="office_supp" label="Office Supplies" onChange={handleInputChange} value={row.office_supp}/>
           <label className="floating-label">Office Supplies</label>
         </div>
@@ -191,6 +180,13 @@ const EditModal = (props) => {
           <input className="inputTxt" type="text"  placeholder=" " name="parole_fee" label="Parole Fee" onChange={handleInputChange} value={row.parole_fee}/>
           <label className="floating-label">Parole Fee</label>
         </div>
+        <div className="txtInputGrp input-group">
+          <span className="inputGrp">
+            <div className="dollarSign">$</div>
+          </span> 
+          <input className="inputTxt" type="text" placeholder=" "  name="effy_share" label="Effy Share" onChange={handleInputChange} value={row.effy_share}/>
+          <label className="floating-label">Effy Share</label>
+        </div>
         <div className="txtInputGrp">
           <select className="inputSelect" name="status_paid" onChange={handleInputChange} value={row.status_paid}>
             <option value="Unpaid">Unpaid</option>
@@ -198,6 +194,10 @@ const EditModal = (props) => {
             <option value="Paid">Paid</option>
           </select>
           <label className="floating-label">Status</label>
+        </div>
+        <div className="txtInputGrp">
+          <input className="inputTxt" type="text" placeholder=" " name="editor" label="Editor" value={row.editor}/>
+          <label className="floating-label">Editor</label>
         </div>
       </form>
       <button className="submitBtn" onClick={handleSubmit_Edit}>Submit</button>
