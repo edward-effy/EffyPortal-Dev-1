@@ -7,6 +7,7 @@ import Modal from "@mui/material/Modal";
 import MUIDataTable from "mui-datatables";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import "./TableNCL.css";
+import moment from 'moment-timezone';
 
 class Table extends React.Component {
   
@@ -26,7 +27,7 @@ class Table extends React.Component {
 
   loadContentFromServer() {
     // Back-end server
-    const url = "https://effyaws5.effysystems.com/ncl_get";
+    const url = "https://dev.effysystems.com/ncl_get";
 
     fetch(url)
       .then((response) => response.json())
@@ -122,6 +123,8 @@ class Table extends React.Component {
         data.effy_rev,
         data.status_paid, 
         data.editor,
+        data.promo_food,
+        data.requisition,
         "",
       ];
       this.setState({ array: data.concat([addUser]) });
@@ -149,7 +152,7 @@ class Table extends React.Component {
         return;
       }
 
-      const url = `https://effyaws5.effysystems.com/ncl_del/${delVoyageNum}`;
+      const url = `https://dev.effysystems.com/ncl_del/${delVoyageNum}`;
       fetch(url, {
         method: "DELETE",
         headers: {
@@ -201,6 +204,8 @@ class Table extends React.Component {
         updateData.effy_rev,
         updateData.status_paid, 
         updateData.editor,
+        updateData.promo_food,
+        updateData.requisition,
         "",
       ];
       this.setState({
@@ -241,6 +246,8 @@ class Table extends React.Component {
             effy_rev: rowData[22],
             status_paid: rowData[23], 
             editor: rowData[24],
+            promo_food: rowData[25],
+            requisition: rowData[26],
             action: "",
           },
           open: true,
@@ -316,16 +323,7 @@ class Table extends React.Component {
           // Dates in DB were stored as YYYY-MM-DD, for UX and readability use function to render MM/DD/YYYY
           customBodyRender: (value, tableMeta, updateValue) => {
             if (!value) return ""; // Handle invalid or undefined date values
-
-            const date = new Date(value);
-            let month = "" + (date.getMonth() + 1), // Months are zero indexed
-              day = "" + (date.getDate() + 1), // Days are zero indexed
-              year = date.getFullYear();
-
-            if (month.length < 2) month = "0" + month;
-            if (day.length < 2) day = "0" + day;
-
-            return [month, day, year].join("/"); // Adjusted to MM/DD/YYYY format
+            return moment(value).format("MM/DD/YYYY");
           },
         },
       },
@@ -343,16 +341,7 @@ class Table extends React.Component {
           // Dates in DB were stored as YYYY-MM-DD, for UX and readability use function to render MM/DD/YYYY
           customBodyRender: (value, tableMeta, updateValue) => {
             if (!value) return ""; // Handle invalid or undefined date values
-
-            const date = new Date(value);
-            let month = "" + (date.getMonth() + 1), // Months are zero indexed
-              day = "" + (date.getDate() + 1), // Days are zero indexed
-              year = date.getFullYear();
-
-            if (month.length < 2) month = "0" + month;
-            if (day.length < 2) day = "0" + day;
-
-            return [month, day, year].join("/"); // Adjusted to MM/DD/YYYY format
+            return moment(value).format("MM/DD/YYYY");
           },
         },
       },
@@ -361,11 +350,7 @@ class Table extends React.Component {
         options: {
           filter: false,
           setCellProps: () => ({
-            style: {
-              textAlign: "left",
-              whiteSpace: "nowrap",
-              paddingLeft: "20px",
-            },
+            style: { textAlign: "left", whiteSpace: "nowrap", paddingLeft: "20px"},
           }),
           // Adding commas
           customBodyRender: (value, tableMeta, updateValue) => {
@@ -377,7 +362,6 @@ class Table extends React.Component {
         name: "VIP Sales",
         options: {
           filter: false,
-          display: false,
           setCellProps: () => ({
             style: { textAlign: "center", whiteSpace: "nowrap" },
           }),
@@ -391,7 +375,7 @@ class Table extends React.Component {
         name: "PLCC",
         options: {
           filter: false,
-          display: true,
+          display: false,
           setCellProps: () => ({
             style: { textAlign: "center", whiteSpace: "nowrap" },
           }),
@@ -405,7 +389,7 @@ class Table extends React.Component {
         name: "DPA",
         options: {
           filter: false,
-          display: true,
+          display: false,
           setCellProps: () => ({
             style: { textAlign: "center", whiteSpace: "nowrap" },
           }),
@@ -617,7 +601,7 @@ class Table extends React.Component {
           filter: false,
           display: true,
           setCellProps: () => ({
-            style: { textAlign: "center", whiteSpace: "nowrap" },
+            style: { textAlign: "left", whiteSpace: "nowrap", paddingLeft: "20px"},
           }),
           // Adding commas for display
           customBodyRender: (value, tableMeta, updateValue) => {

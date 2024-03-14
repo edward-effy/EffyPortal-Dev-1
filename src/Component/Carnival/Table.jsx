@@ -265,7 +265,7 @@ class Table extends React.Component {
           }),
           // Dates in DB were stored as YYYY-MM-DD, for UX and readability use function to render MM/DD/YYYY
           customBodyRender: (value, tableMeta, updateValue) => {
-            if (!value) return "N/A"; // Handle invalid or undefined date values
+            if (!value) return ""; // Handle invalid or undefined date values
             return moment(value).format("MM/DD/YYYY");
           },
         },
