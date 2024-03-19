@@ -7,6 +7,24 @@ import Tesseract from 'tesseract.js';
 import { useUsername } from "../useUsername";
 import InfoIcon from '@mui/icons-material/Info';
 import moment from "moment";
+import PropTypes from "prop-types";
+import LinearProgress from "@mui/material/LinearProgress";
+import Box from "@mui/material/Box";
+
+function LinearProgressWithLabel(props) {
+  return (
+    <Box sx={{ display: "flex", alignItems: "center", color: "white", marginTop: "20px", width: "100.5%", zIndex: "2"}}>
+      <Box sx={{ width: "100%", mr: 1 }}>
+        <LinearProgress variant="determinate" {...props} />
+      </Box>
+    </Box>
+  );
+}
+
+LinearProgressWithLabel.propTypes = {
+//The value of the progress indicator for the determinate and buffer variants. Value between 0 and 100.
+  value: PropTypes.number.isRequired,
+};
 
 function moneyFormat(value, isNegative = false) {
   value = String(value);
@@ -82,13 +100,25 @@ function sumOfRev(str) {
   return total === 0 ? "" : total.toFixed(2);
 };
 
+function extractVoyageNum(str) {
+  str = String(str);
+  const regexPattern = /Voyage #.\s*(\d+)\s+Voyage Start/;
+  let voyageNum = "";
+  const match = str.match(regexPattern);
+  if (match && match[1]) {
+    voyageNum = match[1].replace(/\s+/g, '').replace(/^0+/, '');      // Replace spaces and remove leading zeros
+  }
+  return voyageNum; // Ensure the function returns a value even if no match is found
+}
+
 const AddModal = ({ closeModal }) => {
   const editor = useUsername();
   const [ rows, setRows ] = useState({
     ship_name: '', voyage_num: '', start_date: '', end_date: '', revenue: '', plcc: '', dpa: '', plcc_dpa: '', reg_commission: '', vip_commission: '', effy_rev: '', editor: editor, vip_sales: '', food: '', beverages: '', 
     discounts: '', cc_fee: '', cash_adv: '', supplies: '', misc_charges: '', vat: '', medical_charges: '', printing: '', prize_voucher: '', status_paid: '', promo_food: '', requisition: ''
   });
-  
+  const [progress, setProgress] = React.useState(0);
+
   function convertDate(day, monthAbbrev, year) {
     year = year.length === 2 ? `20${year}` : year;
     const dateString = `${day}-${monthAbbrev}-${year}`;
@@ -101,7 +131,7 @@ const AddModal = ({ closeModal }) => {
     const file = event.dataTransfer.files[0];
     if (file) {
       // Check if the file type is PDF, JPG, or JPEG
-      if (file.type === 'application/pdf' || file.type === 'image/jpeg' || file.type === 'image/jpg') {
+      if (file.type === 'application/pdf' || file.type === 'application/jpeg' || file.type === 'application/jpg') {
         await handleFileChange({ target: { files: [file] } });
       } else {
         console.error('Unsupported file type. Please upload a PDF, JPG, or JPEG file.');
@@ -114,75 +144,6 @@ const AddModal = ({ closeModal }) => {
     event.preventDefault(); // Necessary to allow for drop
   };
 
-  const processImageFile = (imageFile) => {
-    Tesseract.recognize(imageFile, 'eng', {
-      logger: m => console.log(m),
-    }).then(({ data: { text: ocrText } }) => {
-      console.log(ocrText);
-      try {
-        function extractValue(regexPattern) {
-          if (typeof ocrText !== 'string') {
-            console.error('ocrText is not a string:', ocrText);
-            return '';
-          }
-          const match = ocrText.match(regexPattern);
-          // Return with removed spaceses 
-          return match ? match.slice(1): [];
-        }
-  
-        // Retrieve the last word from the first line as ShipName
-        const ship_name = extractValue(/Ship Name: Norwegian (\w+)/);
-        // Retrieve the last string from the second line as VoyageNum
-        const voyage_num = extractValue(/Voyage #.\s*(\d+)\s+Voyage Start/);
-        // Retrieve the date
-        const startDateMatch = extractValue(/Voyage Start: (\d{2})-(\w{3})-(\d{2})/);
-        const start_date = convertDate(...startDateMatch);
-        // ConvertDate is a function that converts DD-MMM-YY to YYYY-MM-DD format.
-        const endDateMatch = extractValue(/Voyage End: (\d{2})-(\w{3})-(\d{2})/);
-        const end_date = convertDate(...endDateMatch);
-        
-        // Initialize the variables to store the data using regular expression
-        const revenue = moneyFormat(sumOfRev(ocrText));
-        // Net Share Amount
-        //const netShare = extractValue(/Revenue.*?\$(\d{1,3}(?:,\d{3})*\.\d{2})\s+Total/) || extractValue(/\$(\d{1,3}(?:,\d{3})*\.\d{2})\s+Total Amount/);
-        // VIP Sales
-        const vip_sales = moneyFormat(extractValue(/VIP Sales \$[\d,]+\.\d{2}\s+\$[\d,]*\.\d{2}\s+\$(\d{1,3}(?:,\d{3})*\.\d{2})/));
-        // PLCC 
-        const plcc = 0 || moneyFormat(extractValue(/Total Amount charged to PLCC System Account \$([\d,]+\.\d{2})/));
-        // DPA
-        const dpa = 0 || moneyFormat(extractValue(/Total Amount charged to DPA System Account \$([\d,]+\.\d{2})/));
-        // PLCC + DPA
-        const plcc_dpa = plcc + dpa; // Neg value but already converted in previous plcc and dpa 
-        const vat = moneyFormat(extractValue(/Total Tax \$([\d,]+\.\d{2})/));
-        const reg_commission = moneyFormat((revenue * 0.36), true); // 36% of Regular Sales
-        const vip_commission = moneyFormat((vip_sales * 0.2), true);
-        console.log("Revenue: " + revenue);
-        const food = moneyFormat(extractValue(/Crew Meals \$([\d,]+\.\d{2})/), true);
-        const beverages = moneyFormat(extractValue(/Champagne Charges - FCR \(Fidelio\) \$([\d,]+\.\d{2})/), true);
-        const cc_fee = moneyFormat(extractValue(/Credit Card Fees \$([\d,]+\.\d{2})/), true);
-        const supplies = moneyFormat(extractValue(), true);
-        const misc_charges = moneyFormat(sumOfMisc(ocrText), true);
-        const cash_adv = moneyFormat(extractValue(/Cash Advances & Expenses Paid in Cash \*\*Max \$\d+\/crulse \$([\d,]+\.\d{2})/), true);
-        const medical_charges = moneyFormat(extractValue(/Medical Charges - FCR \(Fidelio\) \$([\d,]+\.\d{2})/), true);
-        const printing = moneyFormat(extractValue(/Printing Charges - Cashbook \(FCB\) \$([\d,]+\.\d{2})/), true);
-        const prize_voucher = moneyFormat(extractValue(/Wheel of Fortune Jewelry Prize Voucher \(Due TO\) \(enter as positive, subtracted from Total - backup from WOF\) \$([\d,]+\.\d{2})/), true);
-        const requisition = moneyFormat(sumOfReq(ocrText), true);
-        const promo_food = null;
-        const discounts = extractValue(/Discount - Due to Effy \$([\d,]+\.\d{2})/);
-        //const effyRev_regex = moneyFormat(extractValue(/Effy: \$([\d,]+\.\d{2})/)) || moneyFormat(extractValue(/Net Due to Effy: ([\d,]+\.\d{2})/));
-        //const allExpenses = food + beverages + cc_fee + misc_charges + cash_adv + medical_charges + printing + requisition + promo_food;
-        //const effy_rev = netShare - (plcc_dpa + allExpenses) + (discounts + prize_voucher);
-        const effy_rev = moneyFormat(extractValue(/Effy: \$([\d,]+\.\d{2})/)) || moneyFormat(extractValue(/Net Due to Effy: ([\d,]+\.\d{2})/));
-        setRows({...rows, ship_name, voyage_num, start_date, end_date, revenue, plcc, dpa, plcc_dpa, reg_commission, vip_commission, effy_rev, editor, vip_sales, food, beverages, 
-                          discounts, cc_fee, cash_adv, supplies, misc_charges, vat, medical_charges, printing, prize_voucher, requisition, promo_food})
-      }catch (error){
-        console.error('Error parsing the Image: ', error);
-      }
-    }).catch(error => {
-      console.error('OCR error:', error);
-    });
-  };
-
   const readFileData = (file) => {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
@@ -190,7 +151,8 @@ const AddModal = ({ closeModal }) => {
         resolve(e.target.result);
       };
       reader.onerror = (err) => {
-        reject(err);
+        reader.abort();
+        reject(new DOMException("Problem parsing input file."));
       };
       reader.readAsDataURL(file);
     });
@@ -224,7 +186,7 @@ const AddModal = ({ closeModal }) => {
       // If the file is an image, use Tesseract.js for OCR
       processImageFile(file);
     } else if (file.type === "application/pdf") {
-      // If the file is a PDF, convert to images and then use Tesseract.js for OCR
+      //If the file is a PDF, convert to images and then use Tesseract.js for OCR
       convertPdfToImages(file).then(images => {
         images.forEach(image => {
           processImageFile(image);
@@ -234,42 +196,123 @@ const AddModal = ({ closeModal }) => {
       alert("Unsupported file type.");
     }
   };
-
-  const handleSubmit_Add = (event) => {
-    const url = `https://dev.effysystems.com/ncl_post`
-    fetch(url, {
+// Backend Connection
+  const handleSubmit_ncl = () => {
+    fetch(`http://localhost:3000/ncl_post`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(rows),
     })
-      .then(response => response.json())
-      .then((data) => {
-        if (!data.success) {
-          alert(data.alert);
-        } else {
-          closeModal();
-          alert("Data updated successfully");
-        }
-      })
-      .catch((error) => {
-        // If the error has a message property, it's a JSON error from the server
-        alert(`Error: ${error.message || "Something went wrong"}`);
-      });
+    .then(response => response.json())
+    .then((data) => {
+      if (!data.success) {
+        alert(data.alert);
+      } else {
+        closeModal();
+        alert("Data updated successfully");
+      }
+    })
+    .catch((error) => {
+      // If the error has a message property, it's a JSON error from the server
+      alert(`Error: ${error.message || "Something went wrong"}`);
+    });
   }
+
+  const processImageFile = (imageFile) => {
+    setProgress(10);
+    setProgress(50);
+    Tesseract.recognize(imageFile, 'eng', {
+      logger: m => console.log(m),
+    }).then(({ data: { text: ocrText } }) => {
+      console.log(ocrText);
+      try {
+        function extractValue(regexPattern) {
+          const match = ocrText.match(regexPattern);
+          // Return with removed spaceses 
+          return match ? match[1] : '';
+        }
+        // Retrieve the last word from the first line as ShipName
+        const ship_name = extractValue(/Ship Name: Norwegian (\w+)/);
+        // Retrieve the last string from the second line as VoyageNum
+        const voyage_num = extractVoyageNum(ocrText);
+        console.log("Voyage Num: " + voyage_num);
+        // Retrieve the date
+        const startDateMatch = extractValue(/Voyage Start: (\d{2})-(\w{3})-(\d{2})/);
+        const start_date = convertDate(...startDateMatch);
+        // ConvertDate is a function that converts DD-MMM-YY to YYYY-MM-DD format.
+        const endDateMatch = extractValue(/Voyage End: (\d{2})-(\w{3})-(\d{2})/);
+        const end_date = convertDate(...endDateMatch);
+        
+        // Initialize the variables to store the data using regular expression
+        const revenue = moneyFormat(sumOfRev(ocrText));
+        // Net Share Amount
+        //const netShare = extractValue(/Revenue.*?\$(\d{1,3}(?:,\d{3})*\.\d{2})\s+Total/) || extractValue(/\$(\d{1,3}(?:,\d{3})*\.\d{2})\s+Total Amount/);
+        // VIP Sales
+        const vip_sales = moneyFormat(extractValue(/VIP Sales \$[\d,]+\.\d{2}\s+\$[\d,]*\.\d{2}\s+\$(\d{1,3}(?:,\d{3})*\.\d{2})/));
+        // PLCC 
+        const plcc = 0 || moneyFormat(extractValue(/Total Amount charged to PLCC System Account \$([\d,]+\.\d{2})/));
+        // DPA
+        const dpa = 0 || moneyFormat(extractValue(/Total Amount charged to DPA System Account \$([\d,]+\.\d{2})/));
+        // PLCC + DPA
+        const plcc_dpa = plcc + dpa; // Neg value but already converted in previous plcc and dpa 
+        const vat = moneyFormat(extractValue(/Total Tax \$([\d,]+\.\d{2})/));
+        const reg_commission = moneyFormat((revenue * 0.36), true); // 36% of Regular Sales
+        const vip_commission = moneyFormat((vip_sales * 0.2), true); // 20% of VIP Sales
+        console.log("Revenue: " + revenue);
+        const food = moneyFormat(extractValue(/Crew Meals \$([\d,]+\.\d{2})/), true);
+        const beverages = moneyFormat(extractValue(/Champagne Charges - FCR \(Fidelio\) \$([\d,]+\.\d{2})/), true);
+        const cc_fee = moneyFormat(extractValue(/Credit Card Fees \$([\d,]+\.\d{2})/), true);
+        const supplies = moneyFormat(extractValue(), true);
+        const misc_charges = moneyFormat(sumOfMisc(ocrText), true);
+        const cash_adv = moneyFormat(extractValue(/Cash Advances & Expenses Paid in Cash \*\*Max \$\d+\/crulse \$([\d,]+\.\d{2})/), true);
+        const medical_charges = moneyFormat(extractValue(/Medical Charges - FCR \(Fidelio\) \$([\d,]+\.\d{2})/), true);
+        const printing = moneyFormat(extractValue(/Printing Charges - Cashbook \(FCB\) \$([\d,]+\.\d{2})/), true);
+        const prize_voucher = moneyFormat(extractValue(/Wheel of Fortune Jewelry Prize Voucher \(Due TO\) \(enter as positive, subtracted from Total - backup from WOF\) \$([\d,]+\.\d{2})/), true);
+        const requisition = moneyFormat(sumOfReq(ocrText), true);
+        const promo_food = null;
+        const discounts = extractValue(/Discount - Due to Effy \$([\d,]+\.\d{2})/);
+        console.log("Discounts: " + discounts);
+        //const effyRev_regex = moneyFormat(extractValue(/Effy: \$([\d,]+\.\d{2})/)) || moneyFormat(extractValue(/Net Due to Effy: ([\d,]+\.\d{2})/));
+        //const allExpenses = food + beverages + cc_fee + misc_charges + cash_adv + medical_charges + printing + requisition + promo_food;
+        //const effy_rev = netShare - (plcc_dpa + allExpenses) + (discounts + prize_voucher);
+        const effy_rev = moneyFormat(extractValue(/Effy: \$([\d,]+\.\d{2})/)) || moneyFormat(extractValue(/Net Due to Effy: ([\d,]+\.\d{2})/));
+        setRows({...rows, ship_name, voyage_num, start_date, end_date, revenue, plcc, dpa, plcc_dpa, reg_commission, vip_commission, vip_sales, food, beverages, 
+                          discounts, cc_fee, cash_adv, supplies, misc_charges, vat, medical_charges, printing, prize_voucher, effy_rev, editor, requisition, promo_food})
+        setProgress(70);
+        setProgress(100);
+      }catch (error){
+        try {
+          const errorObject = JSON.parse(error.message);
+          console.error('There was a problem with the fetch operation:', errorObject);
+          alert('Error: ' + errorObject.message);
+        } catch (parseError) {
+          console.error('There was a problem parsing the error message:', parseError);
+          alert('There was a problem with the network operation: ' + error.toString());
+        }
+        setProgress(0);
+      }
+    }).catch(error => {
+      console.error('Tesseract OCR error:', error);
+      setProgress(0);
+    });
+  };
+
+
 
   // Return ReactJS format input text
     return (
+      <>
       <div className="panel">
         <form className="inputForm">
           <div className="txtInputGrp">
-            <input className="inputTxt" type="text" placeholder=" " name="ship_name" label="Ship Name" onChange={(e) => setRows({ ...rows, ship_name: e.target.value })} value={rows.ship_name}/>
-            <label className="floating-label">Ship Name</label>
-          </div>
-          <div className="txtInputGrp">
             <input className="inputTxt" type="text" placeholder=" " name="voyage_num" label="Voyage #" onChange={(e) => setRows({ ...rows, voyage_num: e.target.value })} value={rows.voyage_num}/>
             <label className="floating-label">Voyage #</label>
+          </div>
+          <div className="txtInputGrp">
+            <input className="inputTxt" type="text" placeholder=" " name="ship_name" label="Ship Name" onChange={(e) => setRows({ ...rows, ship_name: e.target.value })} value={rows.ship_name}/>
+            <label className="floating-label">Ship Name</label>
           </div>
           <div className="txtInputGrp">
             <input className="inputTxt" type="text" placeholder=" " name="start_date" label="Start Date" onChange={(e) => setRows({ ...rows, start_date: e.target.value })} value={rows.start_date}/>
@@ -331,7 +374,7 @@ const AddModal = ({ closeModal }) => {
             <span className="inputGrp">
               <div className="dollarSign">$</div>
             </span>
-            <input className="inputTxt" type="text" placeholder=" " name="reg_commission" label="Cruise Commission" onChange={(e) => setRows({ ...rows, reg_commission: e.target.value })} readOnly value={rows.reg_commission || null}/>
+            <input className="inputTxt" type="text" placeholder=" " name="reg_commission" label="Cruise Commission" onChange={(e) => setRows({ ...rows, reg_commission: e.target.value })} readOnly value={rows.revenue * 0.36 || null}/>
             <label className="floating-label">Cruise Commission</label>
             <i title="36% of Regular Sales"><InfoIcon fontSize="small" color="disabled"/></i>
           </div>
@@ -339,7 +382,7 @@ const AddModal = ({ closeModal }) => {
             <span className="inputGrp">
               <div className="dollarSign">$</div>
             </span>
-            <input className="inputTxt" type="text" placeholder=" " name="vip_commission" label="VIP Commission" onChange={(e) => setRows({ ...rows, vip_commission: e.target.value })} readOnly value={rows.vip_commission || null}/>
+            <input className="inputTxt" type="text" placeholder=" " name="vip_commission" label="VIP Commission" onChange={(e) => setRows({ ...rows, vip_commission: e.target.value })} readOnly value={rows.vip_sales * 0.2 || null}/>
             <label className="floating-label">VIP Commission</label>
             <i title="20% of VIP Sales"><InfoIcon fontSize="small" color="disabled"/></i>
           </div>
@@ -379,9 +422,9 @@ const AddModal = ({ closeModal }) => {
             <span className="inputGrp">
               <div className="dollarSign">$</div>
             </span>
-            <input className="inputTxt" type="text" placeholder=" " name="supplies" label="Supplies" onChange={(e) => setRows({ ...rows, supplies: e.target.value })} value={rows.supplies || null}/>
-            <label className="floating-label">Supplies</label>
-            <i title="Supplies"><InfoIcon fontSize="small" color="disabled"/></i>
+            <input className="inputTxt" type="text" placeholder=" " name="requisition" label="Requisition" onChange={(e) => setRows({ ...rows, requisition: e.target.value })} value={rows.requisition || null}/>
+            <label className="floating-label">Requisition</label>
+            <i title="Requisition"><InfoIcon fontSize="small" color="disabled"/></i>
           </div>
           <div className="txtInputGrp input-group">
             <span className="inputGrp">
@@ -427,6 +470,14 @@ const AddModal = ({ closeModal }) => {
             <span className="inputGrp">
               <div className="dollarSign">$</div>
             </span>
+            <input className="inputTxt" type="text" placeholder=" " name="promo_food" label="Promo. Food" onChange={(e) => setRows({ ...rows, promo_food: e.target.value })} value={rows.promo_food || null}/>
+            <label className="floating-label">Promo. Food</label>
+            <i title="Promotional Food Charges"><InfoIcon fontSize="small" color="disabled"/></i>
+          </div>
+          <div className="txtInputGrp input-group">
+            <span className="inputGrp">
+              <div className="dollarSign">$</div>
+            </span>
             <input className="inputTxt" type="text" placeholder=" " name="effy_rev" label="Effy Revenue" onChange={(e) => setRows({ ...rows, effy_rev: e.target.value })} value={rows.effy_rev || null}/>
             <label className="floating-label">Effy Revenue</label>
             <i title="Effy Share"><InfoIcon fontSize="small" color="disabled"/></i>
@@ -446,9 +497,13 @@ const AddModal = ({ closeModal }) => {
         </form>
         <div className="btns" onDrop={handleDrop} onDragOver={handleDragOver} >
           <input className="fileUpload" type="file" onChange={handleFileChange} accept=".pdf"/>
-          <button className="submitBtn" onClick={handleSubmit_Add}>Submit</button>
+          <button className="submitBtn" onClick={handleSubmit_ncl}>Submit</button>
         </div>
       </div>
+      <Box sx={{ width: "100%" }}>
+        <LinearProgressWithLabel value={progress} />
+      </Box>
+      </>
     );
 }
 export default AddModal;

@@ -1,21 +1,22 @@
 .btnDiv {
-  position: relative !important;
+  position: relative;
   height: 24px;
   margin-bottom: 1vh;
+  width: 1610px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-direction: row;
 }
 
 .addBtn_ncl {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-width: 70px;
-  height: 30px;
-  margin-top: 0;
+  min-width: 50px;
+  height: 25px;
   background: rgb(214, 214, 214);
   border: none;
   border-radius: 25px;
   color: rgb(50, 207, 207);
-  font-size: 15px;
+  font-size: 13px;
   text-transform: uppercase;
   letter-spacing: 2px;
   box-shadow: -7px -7px 20px 0 rgba(255, 255, 255, 0.7),
@@ -23,19 +24,14 @@
 }
 
 .refreshBtn_ncl {
-  position: absolute;
-    right: 0px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-width: 120px;
-  height: 30px;
+  min-width: 100px;
+  height: 25px;
   margin-top: 0;
   background: rgb(214, 214, 214);
   border: none;
   border-radius: 25px;
   color: rgb(50, 207, 207);
-  font-size: 15px;
+  font-size: 13px;
   text-transform: uppercase;
   letter-spacing: 2px;
   box-shadow: -7px -7px 20px 0 rgba(255, 255, 255, 0.7),
@@ -82,7 +78,6 @@
 }
 
 .tableNCL {
-  border: 1px solid transparent;
   width: 98%;
   margin-left: auto;
   margin-right: auto;
@@ -90,84 +85,23 @@
   border-bottom-left-radius: 15px !important;
   border-bottom-right-radius: 15px !important;
   position: relative;
-  top: 80px;
+  top: 65px;
 }
 
 /* Coloured Title Text */
-.pageHeader:hover {
+.nclTxt:hover {
   cursor: none;
   transition: ease-in-out;
 }
 
-.pageHeaderNCL {
-  --border-width: 7px;
-  position: relative;
-  display: flex;
-  justify-content: center !important;
-  align-items: center !important;
-  width: 240px;
-  height: 20px;
-  text-transform: uppercase;
-  border-radius: var(--border-width);
-  padding: 5px;
-  margin-left: 80%;
-  box-shadow: rgba(0.55, 0.55, 0.55, 0.55) 0px 5px 15px;
-
-  &::after {
-    position: absolute;
-    content: "";
-    top: calc(-1 * var(--border-width));
-    left: calc(-1 * var(--border-width));
-    z-index: -1;
-    width: calc(100% + var(--border-width) * 2);
-    height: calc(100% + var(--border-width) * 2);
-    background: linear-gradient(60deg,
-        hsl(224, 85%, 66%),
-        hsl(269, 85%, 66%),
-        hsl(314, 85%, 66%),
-        hsl(359, 85%, 66%),
-        hsl(44, 85%, 66%),
-        hsl(89, 85%, 66%),
-        hsl(134, 85%, 66%),
-        hsl(179, 85%, 66%));
-    background-size: 300% 300%;
-    background-position: 0 50%;
-    border-radius: calc(2 * var(--border-width));
-    animation: moveGradient 4s alternate infinite;
-  }
-}
-
 .nclTxt {
-  margin-left: auto;
-  margin-right: auto;
-  font-weight: bold !important;
-  font-family: Consolas, Menlo, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New, monospace, serif;
-  letter-spacing: 5px;
-  overflow: hidden;
-  white-space: nowrap;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: white;
   font-size: 1.5rem;
   font-weight: bold;
-  margin: 0 auto;
-  padding: 5px;
-  width: 245px;
   text-align: center;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  mix-blend-mode: screen;
-  border-radius: 10px;
-  box-shadow: rgba(0.55, 0.55, 0.55, 0.55) 0px 5px 15px;
-}
-
-@keyframes moveGradient {
-  50% {
-    background-position: 100% 50%;
-  }
+  text-transform: uppercase;
+  line-height: 1;
+  position: relative;
+  white-space: nowrap;
 }
 
 .outerNCL {

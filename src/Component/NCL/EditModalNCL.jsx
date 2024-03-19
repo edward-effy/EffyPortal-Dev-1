@@ -5,37 +5,15 @@ import { useUsername } from "../useUsername";
 const EditModal = (props) => {
   const editor = useUsername();
   const [row, setRow] = useState({
-    voyage_num: "",
-    ship_name: "",
-    start_date: "",
-    end_date: "",
-    revenue: "",
-    vip_sales: "",
-    plcc: "",
-    dpa: "",
-    plcc_dpa: "",
-    vat: "",
-    reg_commission: "",
-    vip_commission: "",
-    discounts: "",
-    food: "",
-    beverages: "",
-    cc_fee: "",
-    supplies: "",
-    misc_charges: "",
-    cash_adv: "",
-    medical_charges: "",
-    printing: "",
-    prize_voucher: "",
-    effy_rev: "",
-    status_paid: "",
-    editor: "",
-  });
+    voyage_num: "", ship_name: "", start_date: "", end_date: "", revenue: "", vip_sales: "", plcc: "",
+    dpa: "", plcc_dpa: "", vat: "", reg_commission: "", vip_commission: "", discounts: "", food: "",
+    beverages: "", cc_fee: "", requisition: "", misc_charges: "", cash_adv: "", medical_charges: "",
+    printing: "", prize_voucher: "", effy_rev: "", status_paid: "", editor: "", promo_food: "",});
 
   // HandleSummit function
-  const handleSubmit_Edit = (event) => {
+  const handleEdit_ncl = (event) => {
     event.preventDefault();
-    fetch(`https://effyaws5.effysystems.com/ncl_put/${props.currentData.voyage_num}`, {
+    fetch(`http://localhost:3000/ncl_put/${props.currentData.voyage_num}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -192,8 +170,8 @@ const EditModal = (props) => {
           <span className="inputGrp">
             <div className="dollarSign">$</div>
           </span>
-          <input className="inputTxt" type="text" placeholder=" " name="supplies" label="Supplies" onChange={handleInputChange} value={row.supplies}/>
-          <label className="floating-label">Supplies</label>
+          <input className="inputTxt" type="text" placeholder=" " name="requisition" label="Requisition" onChange={handleInputChange} value={row.requisition}/>
+          <label className="floating-label">Requisition</label>
         </div>
         <div className="txtInputGrp input-group">
           <span className="inputGrp">
@@ -235,6 +213,13 @@ const EditModal = (props) => {
           <span className="inputGrp">
             <div className="dollarSign">$</div>
           </span>
+          <input className="inputTxt" type="text" placeholder=" " name="promo_food" label="Promo Food" onChange={handleInputChange} value={row.promo_food}/>
+          <label className="floating-label">Promo. Food</label>
+        </div>
+        <div className="txtInputGrp input-group">
+          <span className="inputGrp">
+            <div className="dollarSign">$</div>
+          </span>
           <input className="inputTxt" type="text" placeholder=" " name="effy_rev" label="Effy Revenue" onChange={handleInputChange} value={row.effy_rev}/>
           <label className="floating-label">Effy Revenue</label>
         </div>
@@ -252,7 +237,7 @@ const EditModal = (props) => {
           <label className="floating-label">Editor</label>
         </div>
       </form>
-      <button className="submitBtn" onClick={handleSubmit_Edit}>
+      <button className="submitBtn" onClick={handleEdit_ncl}>
         Submit
       </button>
     </>
