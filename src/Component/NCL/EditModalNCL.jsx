@@ -13,7 +13,7 @@ const EditModal = (props) => {
   // HandleSummit function
   const handleEdit_ncl = (event) => {
     event.preventDefault();
-    fetch(`http://localhost:3000/ncl_put/${props.currentData.voyage_num}`, {
+    fetch(`https://dev.effysystems.com/ncl_put/${props.currentData.voyage_num}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",

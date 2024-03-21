@@ -27,7 +27,7 @@ class Table extends React.Component {
 
   loadContentFromServer() {
     // Back-end server
-    const url = "http://localhost:3000/ncl_get";
+    const url = "https://dev.effysystems.com/ncl_get";
 
     fetch(url)
       .then((response) => response.json())
@@ -155,7 +155,7 @@ class Table extends React.Component {
         return;
       }
 
-      const url = `http://localhost:3000/ncl_del/${delVoyageNum}`;
+      const url = `https://dev.effysystems.com/ncl_del/${delVoyageNum}`;
       fetch(url, {
         method: "DELETE",
         headers: {

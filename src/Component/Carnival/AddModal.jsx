@@ -205,7 +205,7 @@ const AddModal = (props) => {
   };
 
   const handleSubmit_Add = (event) => {
-    const url = `http://localhost:3000/ccl_post`
+    const url = `https://dev.effysystems.com/ccl_post`
     fetch(url, {
       method: "POST",
       headers: {

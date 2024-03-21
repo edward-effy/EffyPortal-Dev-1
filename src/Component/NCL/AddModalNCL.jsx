@@ -294,7 +294,7 @@ const AddModal = (props) => {
   //console.log("JSON Format:\n" + JSON.stringify(rows, null));
   // Backend Connection
   const handleSubmit_ncl = (event) => {
-    fetch(`http://localhost:3000/ncl_post`, {
+    fetch(`https://dev.effysystems.com/ncl_post`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
