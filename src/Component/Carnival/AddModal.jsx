@@ -62,6 +62,31 @@ function sumOfExecFolio(str) {
   return total === 0 ? "" : total.toFixed(2);
 }
 
+// Scan Meal Charge from the pdf, return one if only 1 value, add all if multiple lines
+function sumOfMeals(str) {
+  // Using two simpler regex patterns for different PDF types
+  const regexPattern1 = /LESS MEAL CHARGE.*?\((\d+\.\d+)\)/g;
+  const regexPattern2 = /LESS MEAL CHARGE\s*\$\d+\.\d+\s*\(Rate\)\s*X\s*\d+\s*\(Qty\)\s*\$(\d+\.\d+)/g;
+  const regexPattern3 = /LESS MEAL CHARGE ADJUSTMENT\s*\$\d+\.\d+\s*\(Rate\)\s*X\s*\d+\s*\(Qty\)\s*\$(\d+\.\d+)/g;
+
+  let total = 0;
+
+  // Function to process matches for a given regex
+  const processMatches = (regex) => {
+    let match;
+    while ((match = regex.exec(str)) !== null) {
+      total += parseFloat(match[1].replace(/,/g, ""));
+    }
+  };
+
+  // Process matches for each pattern
+  processMatches(regexPattern1);
+  processMatches(regexPattern2);
+  processMatches(regexPattern3);
+
+  return total === 0 ? "" : total.toFixed(2);
+}
+
 // Date trimming (Accept 2 type of voyage numbers and convert to date)
 function trimDate(inputStr) {
   if (inputStr.length === 13) {
@@ -107,12 +132,9 @@ function moneyFormat(value, isNegative = false) {
 
 // Ship name mapping from voyage number abbr. to full name
 const shipNameMap = {
-  BR:	"BREEZE", CB:	"CELEBRATION", CQ: "CONQUEST", DR: "DREAM", EC:	"ECSTASY",
-  EL:	"ELATION", FD: "FREEDOM", GL:	"GLORY", HZ: "HORIZON", JB: "JUBILEE",
-  LE:	"LEGEND", LI:	"LIBERTY", LM: "LUMINOSA", MC: "MAGIC", MD: "MARDI GRAS",
-  MI:	"MIRACLE", PO: "PANORAMA", PA: "PARADISE", PR: "PRIDE", RD:	"RADIANCE",
-  SE:	"SENSATION", SP: "SPIRIT", SL: "SPLENDOR", SN: "SUNRISE", SH:	"SUNSHINE",
-  VA:	"VALOR", VX: "VENEZIA", VS: "VISTA",
+  BR:	"BREEZE", CB:	"CELEBRATION", CQ: "CONQUEST", DR: "DREAM", EC:	"ECSTASY", EL: "ELATION", FD: "FREEDOM", GL: "GLORY", HZ: "HORIZON", JB: "JUBILEE",
+  LE:	"LEGEND", LI:	"LIBERTY", LM: "LUMINOSA", MC: "MAGIC", MD: "MARDI GRAS",  MI: "MIRACLE", PO: "PANORAMA", PA: "PARADISE", PR: "PRIDE", RD:	"RADIANCE",
+  SE:	"SENSATION", SP: "SPIRIT", SL: "SPLENDOR", SN: "SUNRISE", SH:	"SUNSHINE", VA:	"VALOR", VX: "VENEZIA", VS: "VISTA",
 };
 
 // Function to extract the ship name based on the voyage number
@@ -121,14 +143,24 @@ function getShipNameFromVoyageNum(voyageNum) {
   return shipNameMap[abbreviation] || "";
 }
 
-const AddModal = ({ closeModal }) => {
+const AddModal = (props) => {
   const editor = useUsername();
-  
   const [ rows, setRows ] = useState({
     ship_name: '', voyage_num: '', date: '', effy_share: '', editor: editor, rev_ss: '',
     rev_cc: '', ss_fee: '', cc_fee: '', eu_vat: '', discounts: '', carnival_share: '', exec_folio: '',
     meal_charge: '', office_supp: '', cash_adv: '', cash_paid: '', parole_fee: '', status_paid: "Unpaid", dt_entry: ''
   });
+  const [formKey, setFormKey] = useState(0)
+  const initFormState = {
+    ship_name: '', voyage_num: '', date: '', effy_share: '', editor: editor, rev_ss: '',
+    rev_cc: '', ss_fee: '', cc_fee: '', eu_vat: '', discounts: '', carnival_share: '', exec_folio: '',
+    meal_charge: '', office_supp: '', cash_adv: '', cash_paid: '', parole_fee: '', status_paid: "Unpaid", dt_entry: ''
+  };
+
+  const resetFrom = () => {
+    setRows(initFormState);
+    setFormKey(prevKey => prevKey + 1);
+  }
   
   const handleFileChange = async (event) => {
     const file =  event.target.files[0];
@@ -157,7 +189,7 @@ const AddModal = ({ closeModal }) => {
       const ss_fee = moneyFormat(extractValue(/LESS SAIL AND SIGN CC PROCESSING FEE.*?\((\d+\.\d+)\)/), true) || moneyFormat(extractValue(/LESS SAIL AND SIGN CC PROCESSING FEE - SAIL\s+AND SIGN CC.*?\$(\d{1,3}(?:,\d{3})*\.\d{2})/), true);
       const cc_fee = moneyFormat(extractValue(/LESS DIRECT CREDIT CARD PROCESSING FEE.*?\((\d+\.\d+)\)/), true) || moneyFormat(extractValue(/LESS CC PROCESSING FEE - DIRECT\s+CC.*?\$(\d{1,3}(?:,\d{3})*\.\d{2})/), true);
       const discounts = moneyFormat(extractValue(/PLUS CCL CREW SALES DISCOUNT.*?\((\d+\.\d+)\)/));
-      const meal_charge = moneyFormat(extractValue(/LESS MEAL CHARGE.*?\((\d+\.\d+)\)/), true) || moneyFormat(extractValue(/LESS MEAL CHARGE\s*\$\d+\.\d+\s*\(Rate\)\s*X\s*\d+\s*\(Qty\)\s*\$(\d+\.\d+)/), true);
+      const meal_charge = moneyFormat(sumOfMeals(extractedData), true);
       const office_supp = moneyFormat(extractValue(/LESS OFFICE SUPPLIES.*?\((\d+,\d+\.\d+)\)/), true);
       const eu_vat = moneyFormat(extractValue(/LESS EU VAT.*?\((\d+,\d+\.\d+)\)/), true);
       const parole_fee = moneyFormat(extractValue(/LESS PAROLE FEE.*?\((\d+\.\d+)\)/), true) || moneyFormat(extractValue(/LESS CREW PAROLE CHARGE\s+\d+% of \$\d+\s+\$(\d+\.?\d+)/), true);
@@ -173,7 +205,7 @@ const AddModal = ({ closeModal }) => {
   };
 
   const handleSubmit_Add = (event) => {
-    const url = `https://dev.effysystems.com/ccl_post`
+    const url = `http://localhost:3000/ccl_post`
     fetch(url, {
       method: "POST",
       headers: {
@@ -183,16 +215,16 @@ const AddModal = ({ closeModal }) => {
     })
       .then(response => response.json())
       .then((data) => {
-        if (!data.success) {
-          alert(data.alert);
-        } else {
-          closeModal();
-          alert("Data updated successfully");
-        }
+        alert(data.alert);
+        //props.closeModal();
+        // Reset the form by setting the state back to its initial value   
+        resetFrom(); 
       })
-      .catch((error) => {
+      .catch((error, data) => {
         // If the error has a message property, it's a JSON error from the server
+        alert(data.alert); 
         alert(`Error: ${error.message || "Something went wrong"}`);
+        resetFrom();
       });
   }
 
@@ -213,7 +245,7 @@ const AddModal = ({ closeModal }) => {
   // Return ReactJS format input text
     return (
       <>
-        <form className="inputForm">
+        <form className="inputForm" key={formKey}>
           <div className="txtInputGrp">
             <input className="inputTxt" type="text" placeholder=" " name="ship_name" label="Ship Name" onChange={(e) => setRows({ ...rows, ship_name: e.target.value })} value={rows.ship_name}/>
             <label className="floating-label">Ship Name</label>

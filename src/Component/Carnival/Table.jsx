@@ -534,7 +534,7 @@ class Table extends React.Component {
       print: "disabled",
       fixedSelectColumn: true,
       tableBodyHeight: "100%",
-      tableBodyMaxHeight: "74vh",
+      tableBodyMaxHeight: "78vh",
       downloadOptions: {
         filename: "CCL-Voyages.csv",
         separator: ",",
@@ -547,29 +547,13 @@ class Table extends React.Component {
 
     return (
       <div className="tableCCL">
-        <div className="btnDiv">
-          <button
-            className="addBtn_ccl"
-            onClick={() => {
-              addButton();
-            }}
-          >
-            Add
-          </button>
-          <button
-            className="refreshBtn_ccl"
-            onClick={() => {
-              this.loadContentFromServer();
-            }}
-          >
-            Refresh
-          </button>
-        </div>
         <MUIDataTable
           className="CCLDataTable"
           title={
-            <div className="pageHeader">
-              <p className="carnivalTxt">CARNIVAL DATA</p>
+            <div className="btnDiv_ccl">
+              <button className="addBtn_ccl" onClick={() => {addButton();}}>Add</button>
+              <p><span className="cclTxt">Carnival Data</span></p>
+              <button className="refreshBtn_ccl" onClick={() => {this.loadContentFromServer();}}>Refresh</button>
             </div>
           }
           data={data}

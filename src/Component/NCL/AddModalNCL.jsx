@@ -65,7 +65,7 @@ function sumOfMisc(str) {
 
 function sumOfReq(str) {
   // Using two simpler regex patterns for different PDF types
-  const req1 = /Requisitions from Hotel Stores - MXP \(provido Cost Center report monthly in straddle\) \$([\d,]+\.\d{2})/g;
+  const req1 = /Requisitions from Hotel Stores - MXP. *?\$([\d,]+\.\d{2})/g;
   const req2 = /Requisitions - Direct Expense \$([\d,]+\.\d{2})/g;
   let total = 0;
   // Function to process matches for a given regex
@@ -111,21 +111,41 @@ function extractVoyageNum(str) {
   return voyageNum; // Ensure the function returns a value even if no match is found
 }
 
-const AddModal = ({ closeModal }) => {
+const AddModal = (props) => {
   const editor = useUsername();
   const [ rows, setRows ] = useState({
     voyage_num: '', ship_name: '', start_date: '', end_date: '', revenue: '', plcc: '', dpa: '', plcc_dpa: '', reg_commission: '', vip_commission: '', effy_rev: '', editor: editor, vip_sales: '', food: '', beverages: '', 
     discounts: '', cc_fee: '', cash_adv: '', supplies: '', misc_charges: '', vat: '', medical_charges: '', printing: '', prize_voucher: '', status_paid: 'Unpaid', promo_food: '', requisition: ''
   });
   const [progress, setProgress] = React.useState(0);
+  const [formKey, setFormKey] = useState(0)
+  const initFormState = {voyage_num: '', ship_name: '', start_date: '', end_date: '', revenue: '', plcc: '', dpa: '', plcc_dpa: '', reg_commission: '', vip_commission: '', effy_rev: '', editor: editor, vip_sales: '', food: '', beverages: '', 
+  discounts: '', cc_fee: '', cash_adv: '', supplies: '', misc_charges: '', vat: '', medical_charges: '', printing: '', prize_voucher: '', status_paid: 'Unpaid', promo_food: '', requisition: ''
+  };
 
-  function convertDate(day, monthAbbrev, year) {
-    if ( day == null || monthAbbrev == null || year == null){
-      return null;
-    }else{
-      year = year.length === 2 ? `20${year}` : year;
+  const resetFrom = () => {
+    setRows(initFormState);
+    setFormKey(prevKey => prevKey + 1);
+  }
+
+  function convertDate(ocrText, dateType) {
+    // Define regex patterns to extract the specific date from the ocrText
+    const datePattern = dateType === 'start'
+      ? /Voyage Start: (\d{2})-(\w{3})-(\d{2})/
+      : /Voyage End: (\d{2})-(\w{3})-(\d{2})/;
+    // Extract the date from ocrText
+    const dateMatch = ocrText.match(datePattern);
+    // If a match is found, format and return the date, otherwise return 'Invalid date'
+    if (dateMatch && dateMatch.length >= 4) {
+      // Extract the day, month abbreviation, and year from the match
+      const day = dateMatch[1];
+      const monthAbbrev = dateMatch[2];
+      const year = dateMatch[3].length === 2 ? `20${dateMatch[3]}` : dateMatch[3];
+      // Construct the date string and format it using moment
       const dateString = `${day}-${monthAbbrev}-${year}`;
       return moment(dateString, 'DD-MMM-YY').format('YYYY-MM-DD');
+    } else {
+      return 'Invalid date';
     }
   }
 
@@ -203,7 +223,7 @@ const AddModal = ({ closeModal }) => {
 
   const processImageFile = (imageFile) => {
     setProgress(10);
-    setProgress(50);
+    setProgress(30);
     Tesseract.recognize(imageFile, 'eng', {
       logger: m => console.log(m),
     }).then(({ data: { text: ocrText } }) => {
@@ -219,16 +239,12 @@ const AddModal = ({ closeModal }) => {
           return match ? match[1] : '';
         }
         // Retrieve the last word from the first line as ShipName
-        const ship_name = extractValue(/Ship Name: Norwegian (\w+)/);
+        const ship_name = extractValue(/Norwegian (\w+)/);
         // Retrieve the last string from the second line as VoyageNum
         const voyage_num = extractVoyageNum(ocrText);
         // Retrieve the date
-        const startDateMatch = extractValue(/Voyage Start: (\d{2})-(\w{3})-(\d{2})/);
-        const start_date = convertDate(...startDateMatch);
-        // ConvertDate is a function that converts DD-MMM-YY to YYYY-MM-DD format.
-        const endDateMatch = extractValue(/Voyage End: (\d{2})-(\w{3})-(\d{2})/);
-        const end_date = convertDate(...endDateMatch);
-        
+        const start_date = convertDate(ocrText, 'start');
+        const end_date = convertDate(ocrText, 'end');
         // Initialize the variables to store the data using regular expression
         const revenue = moneyFormat(sumOfRev(ocrText));
         // Net Share Amount
@@ -244,11 +260,11 @@ const AddModal = ({ closeModal }) => {
         const vat = moneyFormat(extractValue(/Total Tax \$([\d,]+\.\d{2})/));
         const reg_commission = moneyFormat((revenue * 0.36), true); // 36% of Regular Sales
         const vip_commission = moneyFormat((vip_sales * 0.2), true); // 20% of VIP Sales
-        console.log("Revenue: " + revenue);
         const food = moneyFormat(extractValue(/Crew Meals \$([\d,]+\.\d{2})/), true);
         const beverages = moneyFormat(extractValue(/Champagne Charges - FCR \(Fidelio\) \$([\d,]+\.\d{2})/), true);
         const cc_fee = moneyFormat(extractValue(/Credit Card Fees \$([\d,]+\.\d{2})/), true);
         const supplies = moneyFormat(extractValue(), true);
+        setProgress(50);
         const misc_charges = moneyFormat(sumOfMisc(ocrText), true);
         const cash_adv = moneyFormat(extractValue(/Cash Advances & Expenses Paid in Cash \*\*Max \$\d+\/crulse \$([\d,]+\.\d{2})/), true);
         const medical_charges = moneyFormat(extractValue(/Medical Charges - FCR \(Fidelio\) \$([\d,]+\.\d{2})/), true);
@@ -257,7 +273,7 @@ const AddModal = ({ closeModal }) => {
         const requisition = moneyFormat(sumOfReq(ocrText), true);
         const promo_food = null;
         const discounts = extractValue(/Discount - Due to Effy \$([\d,]+\.\d{2})/);
-        console.log("Discounts: " + discounts)
+        //console.log("Discounts: " + discounts)
         //const effyRev_regex = moneyFormat(extractValue(/Effy: \$([\d,]+\.\d{2})/)) || moneyFormat(extractValue(/Net Due to Effy: ([\d,]+\.\d{2})/));
         //const allExpenses = food + beverages + cc_fee + misc_charges + cash_adv + medical_charges + printing + requisition + promo_food;
         //const effy_rev = netShare - (plcc_dpa + allExpenses) + (discounts + prize_voucher);
@@ -275,7 +291,7 @@ const AddModal = ({ closeModal }) => {
       setProgress(0);
     });
   };
-  console.log("JSON Format:\n" + JSON.stringify(rows, null));
+  //console.log("JSON Format:\n" + JSON.stringify(rows, null));
   // Backend Connection
   const handleSubmit_ncl = (event) => {
     fetch(`http://localhost:3000/ncl_post`, {
@@ -287,24 +303,25 @@ const AddModal = ({ closeModal }) => {
     })
     .then(response => response.json())
     .then((data) => {
-      if (!data.success) {
         alert(data.alert);
-      } else {
-        closeModal();
-        alert("Data updated successfully");
-      }
-    })
-    .catch((error) => {
+        props.closeModal();
+        // Reset the form by setting the state back to its initial value   
+        //resetFrom();
+        setProgress(0); 
+      })
+    .catch((error, data) => {
       // If the error has a message property, it's a JSON error from the server
+      //alert(data.alert); 
       alert(`Error: ${error.message || "Something went wrong"}`);
+      resetFrom();
+      setProgress(0);
     });
   }
 
   // Return ReactJS format input text
     return (
       <>
-      <div className="panel">
-        <form className="inputForm_ncl">
+        <form className="inputForm_ncl" key={formKey}>
           <div className="txtInputGrp">
             <input className="inputTxt" type="text" placeholder=" " name="voyage_num" label="Voyage #" onChange={(e) => setRows({ ...rows, voyage_num: e.target.value })} value={rows.voyage_num}/>
             <label className="floating-label">Voyage #</label>
@@ -498,7 +515,6 @@ const AddModal = ({ closeModal }) => {
           <input className="fileUpload" type="file" onChange={handleFileChange} accept=".pdf"/>
           <button className="submitBtn" onClick={handleSubmit_ncl}>Submit</button>
         </div>
-      </div>
       <Box sx={{ width: "100%" }}>
         <LinearProgressWithLabel value={progress} />
       </Box>
