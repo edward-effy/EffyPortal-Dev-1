@@ -203,7 +203,6 @@ select.inputSelect::-ms-expand {
   justify-content: center;
   position: relative;
   padding-top: 1rem;
-  padding-right: auto;
   flex-direction: column;
 }
 

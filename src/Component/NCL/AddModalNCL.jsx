@@ -114,15 +114,19 @@ function extractVoyageNum(str) {
 const AddModal = ({ closeModal }) => {
   const editor = useUsername();
   const [ rows, setRows ] = useState({
-    ship_name: '', voyage_num: '', start_date: '', end_date: '', revenue: '', plcc: '', dpa: '', plcc_dpa: '', reg_commission: '', vip_commission: '', effy_rev: '', editor: editor, vip_sales: '', food: '', beverages: '', 
-    discounts: '', cc_fee: '', cash_adv: '', supplies: '', misc_charges: '', vat: '', medical_charges: '', printing: '', prize_voucher: '', status_paid: '', promo_food: '', requisition: ''
+    voyage_num: '', ship_name: '', start_date: '', end_date: '', revenue: '', plcc: '', dpa: '', plcc_dpa: '', reg_commission: '', vip_commission: '', effy_rev: '', editor: editor, vip_sales: '', food: '', beverages: '', 
+    discounts: '', cc_fee: '', cash_adv: '', supplies: '', misc_charges: '', vat: '', medical_charges: '', printing: '', prize_voucher: '', status_paid: 'Unpaid', promo_food: '', requisition: ''
   });
   const [progress, setProgress] = React.useState(0);
 
   function convertDate(day, monthAbbrev, year) {
-    year = year.length === 2 ? `20${year}` : year;
-    const dateString = `${day}-${monthAbbrev}-${year}`;
-    return moment(dateString, 'DD-MMM-YY').format('YYYY-MM-DD');
+    if ( day == null || monthAbbrev == null || year == null){
+      return null;
+    }else{
+      year = year.length === 2 ? `20${year}` : year;
+      const dateString = `${day}-${monthAbbrev}-${year}`;
+      return moment(dateString, 'DD-MMM-YY').format('YYYY-MM-DD');
+    }
   }
 
   // Pdf drag&drop
@@ -196,29 +200,6 @@ const AddModal = ({ closeModal }) => {
       alert("Unsupported file type.");
     }
   };
-// Backend Connection
-  const handleSubmit_ncl = () => {
-    fetch(`http://localhost:3000/ncl_post`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(rows),
-    })
-    .then(response => response.json())
-    .then((data) => {
-      if (!data.success) {
-        alert(data.alert);
-      } else {
-        closeModal();
-        alert("Data updated successfully");
-      }
-    })
-    .catch((error) => {
-      // If the error has a message property, it's a JSON error from the server
-      alert(`Error: ${error.message || "Something went wrong"}`);
-    });
-  }
 
   const processImageFile = (imageFile) => {
     setProgress(10);
@@ -229,6 +210,10 @@ const AddModal = ({ closeModal }) => {
       console.log(ocrText);
       try {
         function extractValue(regexPattern) {
+          if (typeof ocrText !== 'string') {
+            console.error('ocrText is not a string:', ocrText);
+            return '';
+          }
           const match = ocrText.match(regexPattern);
           // Return with removed spaceses 
           return match ? match[1] : '';
@@ -237,7 +222,6 @@ const AddModal = ({ closeModal }) => {
         const ship_name = extractValue(/Ship Name: Norwegian (\w+)/);
         // Retrieve the last string from the second line as VoyageNum
         const voyage_num = extractVoyageNum(ocrText);
-        console.log("Voyage Num: " + voyage_num);
         // Retrieve the date
         const startDateMatch = extractValue(/Voyage Start: (\d{2})-(\w{3})-(\d{2})/);
         const start_date = convertDate(...startDateMatch);
@@ -273,24 +257,17 @@ const AddModal = ({ closeModal }) => {
         const requisition = moneyFormat(sumOfReq(ocrText), true);
         const promo_food = null;
         const discounts = extractValue(/Discount - Due to Effy \$([\d,]+\.\d{2})/);
-        console.log("Discounts: " + discounts);
+        console.log("Discounts: " + discounts)
         //const effyRev_regex = moneyFormat(extractValue(/Effy: \$([\d,]+\.\d{2})/)) || moneyFormat(extractValue(/Net Due to Effy: ([\d,]+\.\d{2})/));
         //const allExpenses = food + beverages + cc_fee + misc_charges + cash_adv + medical_charges + printing + requisition + promo_food;
         //const effy_rev = netShare - (plcc_dpa + allExpenses) + (discounts + prize_voucher);
         const effy_rev = moneyFormat(extractValue(/Effy: \$([\d,]+\.\d{2})/)) || moneyFormat(extractValue(/Net Due to Effy: ([\d,]+\.\d{2})/));
-        setRows({...rows, ship_name, voyage_num, start_date, end_date, revenue, plcc, dpa, plcc_dpa, reg_commission, vip_commission, vip_sales, food, beverages, 
+        setRows({...rows, voyage_num, ship_name, start_date, end_date, revenue, plcc, dpa, plcc_dpa, reg_commission, vip_commission, vip_sales, food, beverages, 
                           discounts, cc_fee, cash_adv, supplies, misc_charges, vat, medical_charges, printing, prize_voucher, effy_rev, editor, requisition, promo_food})
         setProgress(70);
         setProgress(100);
       }catch (error){
-        try {
-          const errorObject = JSON.parse(error.message);
-          console.error('There was a problem with the fetch operation:', errorObject);
-          alert('Error: ' + errorObject.message);
-        } catch (parseError) {
-          console.error('There was a problem parsing the error message:', parseError);
-          alert('There was a problem with the network operation: ' + error.toString());
-        }
+        console.error('Error parsing the attached file: ', error);
         setProgress(0);
       }
     }).catch(error => {
@@ -298,14 +275,36 @@ const AddModal = ({ closeModal }) => {
       setProgress(0);
     });
   };
-
-
+  console.log("JSON Format:\n" + JSON.stringify(rows, null));
+  // Backend Connection
+  const handleSubmit_ncl = (event) => {
+    fetch(`http://localhost:3000/ncl_post`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(rows),
+    })
+    .then(response => response.json())
+    .then((data) => {
+      if (!data.success) {
+        alert(data.alert);
+      } else {
+        closeModal();
+        alert("Data updated successfully");
+      }
+    })
+    .catch((error) => {
+      // If the error has a message property, it's a JSON error from the server
+      alert(`Error: ${error.message || "Something went wrong"}`);
+    });
+  }
 
   // Return ReactJS format input text
     return (
       <>
       <div className="panel">
-        <form className="inputForm">
+        <form className="inputForm_ncl">
           <div className="txtInputGrp">
             <input className="inputTxt" type="text" placeholder=" " name="voyage_num" label="Voyage #" onChange={(e) => setRows({ ...rows, voyage_num: e.target.value })} value={rows.voyage_num}/>
             <label className="floating-label">Voyage #</label>
