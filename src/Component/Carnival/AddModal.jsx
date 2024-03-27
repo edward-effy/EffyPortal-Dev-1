@@ -241,21 +241,23 @@ const AddModal = (props) => {
   const handleDragOver = (event) => {
     event.preventDefault(); // Necessary to allow for drop
   };
-
   // Return ReactJS format input text
     return (
       <>
         <form className="inputForm" key={formKey}>
           <div className="txtInputGrp">
             <input className="inputTxt" type="text" placeholder=" " name="ship_name" label="Ship Name" onChange={(e) => setRows({ ...rows, ship_name: e.target.value })} value={rows.ship_name}/>
+            <input type="checkbox"/>
             <label className="floating-label">Ship Name</label>
           </div>
           <div className="txtInputGrp">
             <input className="inputTxt" type="text" placeholder=" " name="voyage_num" label="Voyage #" onChange={(e) => setRows({ ...rows, voyage_num: e.target.value })} value={rows.voyage_num}/>
+            <input type="checkbox"/>
             <label className="floating-label">Voyage #</label>
           </div>
           <div className="txtInputGrp">
             <input className="inputTxt" type="text" placeholder=" " name="date" label="Date (yyyy/mm/dd)" onChange={(e) => setRows({ ...rows, date: e.target.value })} value={rows.date}/>
+            <input type="checkbox"/>
             <label className="floating-label">Date (yyyy/mm/dd)</label>
           </div>
           <div className="txtInputGrp input-group">
@@ -263,6 +265,7 @@ const AddModal = (props) => {
               <div className="dollarSign">$</div>
             </span>
             <input className="inputTxt" type="text" placeholder=" " name="rev_cc" label="Revenue CC" onChange={(e) => setRows({ ...rows, rev_cc: e.target.value })} value={rows.rev_cc || null}/>
+            <input type="checkbox"/>
             <label className="floating-label">Revenue Direct CC</label>
           </div>
           <div className="txtInputGrp input-group">
@@ -270,6 +273,7 @@ const AddModal = (props) => {
               <div className="dollarSign">$</div>
             </span>
             <input className="inputTxt" type="text" placeholder=" " name="rev_ss" label="Revenue S&S" onChange={(e) => setRows({ ...rows, rev_ss: e.target.value })} value={rows.rev_ss || null}/>
+            <input type="checkbox"/>
             <label className="floating-label">Revenue Sail & Sign</label>
           </div>
           <div className="txtInputGrp input-group">
@@ -277,6 +281,7 @@ const AddModal = (props) => {
               <div className="dollarSign">$</div>
             </span>
             <input className="inputTxt" type="text" placeholder=" " name="carnival_share" label="Carnival Share" onChange={(e) => setRows({ ...rows, carnival_share: e.target.value })} value={rows.carnival_share || null}/>
+            <input type="checkbox"/>
             <label className="floating-label">Carnival Share</label>
           </div>
           <div className="txtInputGrp input-group">
@@ -284,6 +289,7 @@ const AddModal = (props) => {
               <div className="dollarSign">$</div>
             </span>
             <input className="inputTxt" type="text" placeholder=" " name="exec_folio" label="Exec. Folio" onChange={(e) => setRows({ ...rows, exec_folio: e.target.value })} value={rows.exec_folio || null}/>
+            <input type="checkbox"/>
             <label className="floating-label">Exec. Folio</label>
           </div>
           <div className="txtInputGrp input-group">
@@ -291,6 +297,7 @@ const AddModal = (props) => {
               <div className="dollarSign">$</div>
             </span>
             <input className="inputTxt" type="text" placeholder=" " name="meal_charge" label="Meal Charge" onChange={(e) => setRows({ ...rows, meal_charge: e.target.value })} value={rows.meal_charge || null}/>
+            <input type="checkbox"/>
             <label className="floating-label">Meal Charge</label>
           </div>
           <div className="txtInputGrp input-group">
@@ -298,6 +305,7 @@ const AddModal = (props) => {
               <div className="dollarSign">$</div>
             </span>
             <input className="inputTxt" type="text" placeholder=" " name="cash_adv" label="Cash Advance" onChange={(e) => setRows({ ...rows, cash_adv: e.target.value })} value={rows.cash_adv || null}/>
+            <input type="checkbox"/>
             <label className="floating-label">Cash Advance</label>
           </div>
           <div className="txtInputGrp input-group">
@@ -305,6 +313,7 @@ const AddModal = (props) => {
               <div className="dollarSign">$</div>
             </span>
             <input className="inputTxt" type="text" placeholder=" " name="ss_fee" label="S&S Fee" onChange={(e) => setRows({ ...rows, ss_fee: e.target.value })} value={rows.ss_fee || null}/>
+            <input type="checkbox"/>
             <label className="floating-label">Sail & Sign Proc. Fee</label>
           </div>
           <div className="txtInputGrp input-group">
@@ -312,6 +321,7 @@ const AddModal = (props) => {
               <div className="dollarSign">$</div>
             </span>
             <input className="inputTxt" type="text" placeholder=" " name="cc_fee" label="CC Fee" onChange={(e) => setRows({ ...rows, cc_fee: e.target.value })} value={rows.cc_fee || null}/>
+            <input type="checkbox"/>
             <label className="floating-label">CC Proc. Fee</label>
           </div>
           <div className="txtInputGrp input-group">
@@ -319,6 +329,7 @@ const AddModal = (props) => {
               <div className="dollarSign">$</div>
             </span>
             <input className="inputTxt" type="text" placeholder=" " name="eu_vat" label="EU VAT" onChange={(e) => setRows({ ...rows, eu_vat: e.target.value })} value={rows.eu_vat || null}/>
+            <input type="checkbox"/>
             <label className="floating-label">EU VAT</label>
           </div>
           <div className="txtInputGrp input-group">
@@ -326,6 +337,7 @@ const AddModal = (props) => {
               <div className="dollarSign">$</div>
             </span>
             <input className="inputTxt" type="text" placeholder=" " name="discounts" label="Discounts" onChange={(e) => setRows({ ...rows, discounts: e.target.value })} value={rows.discounts || null}/>
+            <input type="checkbox"/>
             <label className="floating-label">Discounts</label>
           </div>
           <div className="txtInputGrp input-group">
@@ -333,6 +345,7 @@ const AddModal = (props) => {
               <div className="dollarSign">$</div>
             </span>
             <input className="inputTxt" type="text" placeholder=" " name="office_supp" label="Office Supplies" onChange={(e) => setRows({ ...rows, office_supp: e.target.value })} value={rows.office_supp || null}/>
+            <input type="checkbox"/>
             <label className="floating-label">Office Supplies</label>
           </div>
           <div className="txtInputGrp input-group">
@@ -340,6 +353,7 @@ const AddModal = (props) => {
               <div className="dollarSign">$</div>
             </span>
             <input className="inputTxt" type="text" placeholder=" " name="cash_paid" label="Cash Paid Onboard" onChange={(e) => setRows({ ...rows, cash_paid: e.target.value })} value={rows.cash_paid || null}/>
+            <input type="checkbox"/>
             <label className="floating-label">Cash Paid Onboard</label>
           </div>
           <div className="txtInputGrp input-group">
@@ -347,6 +361,7 @@ const AddModal = (props) => {
               <div className="dollarSign">$</div>
             </span>
             <input className="inputTxt" type="text" placeholder=" " name="parole_fee" label="Parole Fee" onChange={(e) => setRows({ ...rows, parole_fee: e.target.value })} value={rows.parole_fee || null}/>
+            <input type="checkbox"/>
             <label className="floating-label">Parole Fee</label>
           </div>
           <div className="txtInputGrp input-group">
@@ -354,6 +369,7 @@ const AddModal = (props) => {
               <div className="dollarSign">$</div>
             </span>
             <input className="inputTxt" type="text" placeholder=" " name="effy_share" label="Effy Share" onChange={(e) => setRows({ ...rows, effy_share: e.target.value })} value={rows.effy_share}/>
+            <input type="checkbox"/>
             <label className="floating-label">Effy Share</label>
           </div>
           <div className="txtInputGrp">
